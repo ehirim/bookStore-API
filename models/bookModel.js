@@ -13,8 +13,7 @@ const bookSchema = mongoose.Schema ({
         required: true,
     },
     publisher: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'User',
+        type: String,
         required: true,
     },
     rating: {
@@ -24,6 +23,11 @@ const bookSchema = mongoose.Schema ({
     image: {
         type: String,
         default: ' '
+    },
+    postedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
     },
     publishedDate: {
         type: Date,
