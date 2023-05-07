@@ -28,16 +28,17 @@ const userSchema = mongoose.Schema ({
         required: [true, 'Please enter your number'],
         maxLength: [11, 'Please enter you 11 digit phone number'],
     },
-    password: {
+    hashedPassword: {
         type: String,
         required: [true, 'Please enter your password'],
         minLength: [8, 'Password should be greater than 8 characters'],
     },
-    role: {
-        type: String,
-        default: 'guest'
+    isAdmin: {
+        type: Boolean,
+        default: false,
     },
-})
+});
+
 
 
 exports.User = mongoose.model('User', userSchema);
