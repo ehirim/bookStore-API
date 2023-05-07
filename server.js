@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 // const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const errorHandler = require('./middleware/error-handler');
 
 const dotenv = require('dotenv');
 const connectDatabase = require('./config/database');
@@ -16,6 +17,7 @@ dotenv.config({path:'config/config.env'});
 // app.use(bodyParser.json());
 app.use(express.json());
 app.use(morgan('tiny'));
+app.use(errorHandler);
 
 
 
