@@ -65,7 +65,7 @@ router.post('/login', async (req, res) => {
                 personId: person.id
             },
             secret,
-            {expires: '3d'}
+            {expiresIn: '3d'}
         )
         res.status(200).send({person: person.email, token: token})
     } else {
