@@ -4,7 +4,9 @@ const app = express();
 const morgan = require('morgan');
 
 const dotenv = require('dotenv');
-const connectDatabase = require('./config/database')
+const connectDatabase = require('./config/database');
+
+
 
 // Config
 dotenv.config({path:'config/config.env'});
@@ -14,6 +16,7 @@ dotenv.config({path:'config/config.env'});
 // app.use(bodyParser.json());
 app.use(express.json());
 app.use(morgan('tiny'));
+
 
 
 // Routers

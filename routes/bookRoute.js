@@ -2,6 +2,7 @@ const { Book } = require('../models/bookModel');
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const auth = require('../middleware/auth');
 
 
 // Get List of Books
@@ -31,7 +32,7 @@ router.get(`/:id`, async (req, res) => {
 
 
 // Post a Book
-router.post(`/`, (req, res) => {
+router.post(`/`, auth, (req, res) => {
     const book = new Book({
         title: req.body.title,
         description: req.body.description,
