@@ -3,6 +3,35 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const auth = require('../middleware/auth');
+const multer = require('multer');
+
+
+const  FILE_TYPE_MAP = {
+    'image/png': 'png',
+    'image/jpeg': 'jpeg',
+    'image/jpg': 'jpg'
+}
+
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const isValid = FILE_TYPE_MAP[file.mimetype];
+        let uploadError = new Error('Invalid image type');
+
+        if(isValid) {
+            uploadError = null
+        }
+        cb(uploadError, 'bookCover/uploads')
+    },
+    filename: function (req, file, cb) {
+
+        const fileName = file.originalname.split(' ').join('-');
+        const extension = FILE_TYPE_MAP[file.mimetype];
+        cb(null, `${fileName}-${Date.now()}.${extension}`)
+    }
+})
+
+const uploadOptions = multer({ storage: storage })
 
 
 // Get List of Books
@@ -31,15 +60,22 @@ router.get(`/:id`, async (req, res) => {
 });
 
 
+
 // Post a Book
-router.post(`/`, auth, (req, res) => {
+router.post(`/`, uploadOptions.single('image'), auth, (req, res) => {
+
+    const file = req.file;
+    if(!file) return res.status(400).send('No Image in the request')
+    
+    const fileName = req.file.filename
+    const basePath = `${req.protocol}://${req.get('host')}/bookCover/uploads/`;
     const book = new Book({
         title: req.body.title,
         description: req.body.description,
         author: req.body.author,
         publisher: req.body.publisher,
         rating: req.body.rating,
-        image: req.body.image,
+        image: `${basePath}${fileName}`,  
         publishedDate: req.body.publishedDate,
         postedBy: req.body.postedBy,
     })

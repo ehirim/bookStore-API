@@ -3,6 +3,9 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const auth = require('../middleware/auth');
+const mongoose = require('mongoose');
+
 
 
 // Get List of Users
@@ -17,18 +20,18 @@ router.get(`/`, async (req, res) => {
     res.send(userList);
 });
 
-// Create a User
-router.post(`/`, async (req, res) => {
+// User SignUp
+router.post(`/signup`, async (req, res) => {
     const person = new User({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
         hashedPassword: bcrypt.hashSync(req.body.password, 10),
-        isAdmin: req.body.isAdmin,
+        role: req.body.role,
     })
 
-    person = await person.save();
+    await person.save();
 
     if(!person) {
         return res.status(400).send('The user cannot be created!');
@@ -71,8 +74,7 @@ router.post('/login', async (req, res) => {
     } else {
         res.status(400).send('username or password is incorrect');
     }
-
-})
+});
 
 
 
