@@ -10,7 +10,7 @@ const mongoose = require('mongoose');
 
 // Get List of Users
 router.get(`/`, async (req, res) => {
-    const userList = await User.find().select('-hashedPassword');
+    const userList = await User.find().select('-hashedPassword ');
 
     if(!userList) {
         res.status(500).json({
@@ -51,6 +51,45 @@ router.get(`/:id`, async (req, res) => {
     }
     res.send(userList);
 });
+
+// Update a User
+router.put(`/:id`, async (req, res) => {
+    try {
+        const userList = await User.findByIdAndUpdate(req.params.id, req.body, {new: true});
+        return res.status(200).json({
+            success: true,
+            userList
+        })
+
+        
+    } catch (error) {
+        res.status(501).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+})
+
+
+// Delete a User
+router.delete(`/:id`, async (req, res) => {
+    try {
+        const userList = await User.findByIdAndDelete(req.params.id);
+        return res.status(200).json({
+            success: true,
+            message: "User Successfully Deleted"
+        })
+
+        
+    } catch (error) {
+        res.status(501).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+})
 
 
 // Login A User
